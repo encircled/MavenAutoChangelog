@@ -50,14 +50,15 @@ public class ChangelogMojo extends AbstractMojo {
     protected String unreleasedRowPattern;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        new ChangelogExecutor(new ChangelogConfiguration()
+        ChangelogConfiguration conf = new ChangelogConfiguration()
                 .setApplicableCommitPattern(applicableCommitPattern)
                 .setLastTagPattern(lastTagPattern)
                 .setPathToChangelog(pathToChangelog)
                 .setUnreleasedRowPattern(unreleasedRowPattern)
                 .setLastTagFormat(lastTagFormat)
-                .setCommitFormat(commitFormat)
-        ).run(getLog());
+                .setCommitFormat(commitFormat);
+
+        new ChangelogExecutor(conf, new GitLogParser(conf)).run(getLog());
     }
 
 }
