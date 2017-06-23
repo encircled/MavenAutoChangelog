@@ -4,7 +4,7 @@
 
     <groupId>cz.encircled</groupId>
     <artifactId>maven-auto-changelog</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <name>maven-auto-changelog</name>
     <description>Maven changelog generator</description>
 
@@ -12,7 +12,7 @@
     <scm>
         <connection>scm:git:https://github.com/encircled/MavenAutoChangelog.git</connection>
         <url>https://github.com/encircled/MavenAutoChangelog.git</url>
-        <tag>HEAD</tag>
+        <tag>maven-auto-changelog-0.3</tag>
     </scm>
 
     <licenses>
