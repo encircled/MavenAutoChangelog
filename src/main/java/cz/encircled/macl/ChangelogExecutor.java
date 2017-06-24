@@ -25,6 +25,7 @@ public class ChangelogExecutor {
     public void run(Log log) {
         try {
             log.debug("Changelog file: " + conf.pathToChangelog);
+            log.info("New messages pattern: " + conf.applicableCommitPattern.pattern());
 
             List<String> allLines = Files.lines(conf.pathToChangelog).map(String::trim).collect(Collectors.toList());
 
@@ -39,8 +40,8 @@ public class ChangelogExecutor {
 
             int unreleasedIndex = getIndexOfUnreleasedLine(allLines);
 
-            log.debug("Count of new messages: " + newMessages.size());
-            log.debug("Last tag: " + lastTag);
+            log.info("Count of new messages: " + newMessages.size());
+            log.info("Last tag: " + lastTag);
             log.debug("Index of 'Unreleased' line: " + unreleasedIndex);
 
             List<String> resultLines = insertNewMessages(allLines, newMessages, unreleasedIndex);
