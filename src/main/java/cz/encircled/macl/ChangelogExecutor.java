@@ -1,12 +1,12 @@
 package cz.encircled.macl;
 
+import org.apache.maven.plugin.logging.Log;
+
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-
-import org.apache.maven.plugin.logging.Log;
 
 /**
  * @author Kisel on 22.6.2017.
@@ -30,10 +30,12 @@ public class ChangelogExecutor {
 
             String lastTag = getLastTag(allLines);
             List<String> newMessages = vcsLogParser.getNewMessages(lastTag);
-
-            if (!newMessages.isEmpty()) {
-                newMessages.set(0, "\r\n" + newMessages.get(0));
+            if (newMessages.isEmpty()) {
+                log.debug("No new messages");
+                return;
             }
+
+            newMessages.set(0, "\r\n" + newMessages.get(0));
 
             int unreleasedIndex = getIndexOfUnreleasedLine(allLines);
 

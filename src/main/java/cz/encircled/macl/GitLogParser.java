@@ -27,8 +27,9 @@ public class GitLogParser implements VCSLogParser {
         new Thread(() -> {
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             result.addAll(input.lines()
+                    .map(String::trim)
                     .filter(l -> conf.applicableCommitPattern.matcher(l).matches())
-                    .map(s -> String.format(conf.commitFormat, s.trim()))
+                    .map(s -> String.format(conf.commitFormat, s))
                     .collect(Collectors.toList()));
         }).start();
 
