@@ -1,5 +1,7 @@
 package cz.encircled.macl;
 
+import org.apache.maven.plugin.logging.Log;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class GitLogParser implements VCSLogParser {
     }
 
     @Override
-    public List<String> getNewMessages(String tagFrom) throws Exception {
+    public List<String> getNewMessages(Log log, String tagFrom) throws Exception {
         List<String> result = new ArrayList<>();
 
         Process p = Runtime.getRuntime().exec(String.format(command, tagFrom));
@@ -28,7 +30,13 @@ public class GitLogParser implements VCSLogParser {
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             result.addAll(input.lines()
                     .map(String::trim)
-                    .filter(l -> conf.applicableCommitPattern.matcher(l).matches())
+                    .filter(l -> {
+                        boolean matches = conf.applicableCommitPattern.matcher(l).matches();
+                        if (!matches) {
+                            log.info("Message [" + l + "] skipped");
+                        }
+                        return matches;
+                    })
                     .map(s -> String.format(conf.commitFormat, s))
                     .collect(Collectors.toList()));
         }).start();

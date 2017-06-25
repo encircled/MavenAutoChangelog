@@ -3,6 +3,7 @@ package cz.encircled.macl;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.maven.plugin.logging.Log;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,7 +52,7 @@ public class ChangelogTest {
     }
 
     private ChangelogExecutor executor(ChangelogConfiguration conf) {
-        return new ChangelogExecutor(conf, tagFrom -> defaultNewLines());
+        return new ChangelogExecutor(conf, Log log, tagFrom -> defaultNewLines());
     }
 
     private List<String> defaultNewLines() {

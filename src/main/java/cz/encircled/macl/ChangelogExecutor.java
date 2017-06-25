@@ -30,9 +30,11 @@ public class ChangelogExecutor {
             List<String> allLines = Files.lines(conf.pathToChangelog).map(String::trim).collect(Collectors.toList());
 
             String lastTag = getLastTag(allLines);
-            List<String> newMessages = vcsLogParser.getNewMessages(lastTag);
+            log.info("Last tag: " + lastTag);
+
+            List<String> newMessages = vcsLogParser.getNewMessages(log, lastTag);
             if (newMessages.isEmpty()) {
-                log.debug("No new messages");
+                log.info("No new messages");
                 return;
             }
 
@@ -41,7 +43,6 @@ public class ChangelogExecutor {
             int unreleasedIndex = getIndexOfUnreleasedLine(allLines);
 
             log.info("Count of new messages: " + newMessages.size());
-            log.info("Last tag: " + lastTag);
             log.debug("Index of 'Unreleased' line: " + unreleasedIndex);
 
             List<String> resultLines = insertNewMessages(allLines, newMessages, unreleasedIndex);

@@ -1,5 +1,7 @@
 package cz.encircled.macl;
 
+import org.apache.maven.plugin.logging.Log;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,6 @@ import java.util.List;
  */
 public interface VCSLogParser {
 
-    List<String> getNewMessages(String tagFrom) throws Exception;
+    List<String> getNewMessages(Log log, String tagFrom) throws Exception;
 
 }
