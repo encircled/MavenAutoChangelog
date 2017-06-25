@@ -1,11 +1,10 @@
 package cz.encircled.macl;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.maven.plugin.logging.Log;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Kisel on 22.6.2017.
@@ -52,7 +51,7 @@ public class ChangelogTest {
     }
 
     private ChangelogExecutor executor(ChangelogConfiguration conf) {
-        return new ChangelogExecutor(conf, Log log, tagFrom -> defaultNewLines());
+        return new ChangelogExecutor(conf, (log, tagFrom) -> defaultNewLines());
     }
 
     private List<String> defaultNewLines() {
