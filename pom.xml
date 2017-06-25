@@ -4,7 +4,7 @@
 
     <groupId>cz.encircled</groupId>
     <artifactId>maven-auto-changelog</artifactId>
-    <version>0.3.7-SNAPSHOT</version>
+    <version>0.3.6-SNAPSHOT</version>
     <name>maven-auto-changelog</name>
     <description>Maven changelog generator</description>
 
