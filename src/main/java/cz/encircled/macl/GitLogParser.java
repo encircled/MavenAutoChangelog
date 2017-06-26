@@ -1,12 +1,12 @@
 package cz.encircled.macl;
 
-import org.apache.maven.plugin.logging.Log;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.maven.plugin.logging.Log;
 
 /**
  * @author Kisel on 22.6.2017.
@@ -32,7 +32,9 @@ public class GitLogParser implements VCSLogParser {
                     .map(String::trim)
                     .filter(l -> {
                         boolean matches = conf.applicableCommitPattern.matcher(l).matches();
-                        if (!matches) {
+                        if (matches) {
+                            log.info("Message [" + l + "] included");
+                        } else {
                             log.info("Message [" + l + "] skipped");
                         }
                         return matches;
