@@ -1,12 +1,12 @@
 package cz.encircled.macl;
 
+import org.apache.maven.plugin.logging.Log;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.apache.maven.plugin.logging.Log;
 
 /**
  * @author Kisel on 22.6.2017.
@@ -25,7 +25,8 @@ public class GitLogParser implements VCSLogParser {
     public List<String> getNewMessages(Log log, String tagFrom) throws Exception {
         List<String> result = new ArrayList<>();
 
-        Process p = Runtime.getRuntime().exec(String.format(command, tagFrom));
+        String command = String.format(GitLogParser.command, tagFrom);
+        Process p = Runtime.getRuntime().exec(command);
         new Thread(() -> {
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             result.addAll(input.lines()
@@ -44,6 +45,8 @@ public class GitLogParser implements VCSLogParser {
         }).start();
 
         p.waitFor();
+
+        log.info(String.format("Executed command [%s] returned [%d] rows", command, result.size()));
 
         return result;
     }
