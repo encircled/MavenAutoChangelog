@@ -42,10 +42,6 @@ public class ChangelogExecutor {
                 return;
             }
 
-            newMessages.
-            newMessages.pollFirst()
-            newMessages.set(0, "\r\n" + newMessages.get(0));
-
             int unreleasedIndex = getIndexOfUnreleasedLine(allLines);
 
             log.info("Count of new messages: " + newMessages.size());
