@@ -1,10 +1,12 @@
 package cz.encircled.macl;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Kisel on 22.6.2017.
@@ -54,8 +56,8 @@ public class ChangelogTest {
         return new ChangelogExecutor(conf, (log, tagFrom) -> defaultNewLines());
     }
 
-    private List<String> defaultNewLines() {
-        return Arrays.asList("Test 1", "Test 2");
+    private NavigableSet<String> defaultNewLines() {
+        return new TreeSet<>(Arrays.asList("Test 1", "Test 2"));
     }
 
     private List<String> defaultLines() {

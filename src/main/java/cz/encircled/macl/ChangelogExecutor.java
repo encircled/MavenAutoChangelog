@@ -4,7 +4,11 @@ import org.apache.maven.plugin.logging.Log;
 
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.NavigableSet;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -32,12 +36,14 @@ public class ChangelogExecutor {
             String lastTag = getLastTag(allLines);
             log.info("Last tag: " + lastTag);
 
-            List<String> newMessages = vcsLogParser.getNewMessages(log, lastTag);
+            NavigableSet<String> newMessages = vcsLogParser.getNewMessages(log, lastTag);
             if (newMessages.isEmpty()) {
                 log.info("No new messages");
                 return;
             }
 
+            newMessages.
+            newMessages.pollFirst()
             newMessages.set(0, "\r\n" + newMessages.get(0));
 
             int unreleasedIndex = getIndexOfUnreleasedLine(allLines);
@@ -53,7 +59,7 @@ public class ChangelogExecutor {
         }
     }
 
-    public List<String> insertNewMessages(List<String> allLines, List<String> newMessages, int unreleasedIndex) {
+    public List<String> insertNewMessages(List<String> allLines, Collection<String> newMessages, int unreleasedIndex) {
         List<String> resultLines = new ArrayList<>(allLines.size() + newMessages.size());
         resultLines.addAll(allLines.subList(0, unreleasedIndex + 1));
         resultLines.addAll(newMessages);

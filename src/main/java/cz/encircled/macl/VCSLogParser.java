@@ -1,14 +1,14 @@
 package cz.encircled.macl;
 
-import org.apache.maven.plugin.logging.Log;
+import java.util.NavigableSet;
 
-import java.util.List;
+import org.apache.maven.plugin.logging.Log;
 
 /**
  * @author Kisel on 22.6.2017.
  */
 public interface VCSLogParser {
 
-    List<String> getNewMessages(Log log, String tagFrom) throws Exception;
+    NavigableSet<String> getNewMessages(Log log, String tagFrom) throws Exception;
 
 }
