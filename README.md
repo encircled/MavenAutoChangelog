@@ -29,9 +29,7 @@ For example you have a CHANGELOG.md looking like
 ```
 
 Your configuration may look like:
-```
-- *unreleasedRowPattern* - .*[Unreleased]
-- *lastTagPattern* - .*[\d.] - .*
-- *applicableCommitPattern* - \(.*).* 
-- *commitFormat* - - %s
-```
+- *unreleasedRowPattern* - `.*[Unreleased]`
+- *lastTagPattern* - `.*[\d.] - .*`
+- *applicableCommitPattern* - `\(.*).*`
+- *commitFormat* - `- %s`
