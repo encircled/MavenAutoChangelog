@@ -1,7 +1,5 @@
 package cz.encircled.macl;
 
-import org.apache.maven.plugin.logging.Log;
-
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,6 +7,8 @@ import java.util.List;
 import java.util.NavigableSet;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+
+import org.apache.maven.plugin.logging.Log;
 
 /**
  * @author Kisel on 22.6.2017.
@@ -62,6 +62,10 @@ public class ChangelogExecutor {
     }
 
     public String getLastTag(List<String> allLines) {
+        if (conf.lastTag != null) {
+            return conf.lastTag;
+        }
+
         for (String line : allLines) {
             Matcher matcher = conf.lastTagPattern.matcher(line);
             if (matcher.matches()) {

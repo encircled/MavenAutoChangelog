@@ -11,6 +11,8 @@ public class ChangelogConfiguration {
 
     public Path pathToChangelog;
 
+    public String lastTag;
+
     public Pattern lastTagPattern;
 
     public Pattern applicableCommitPattern;
@@ -20,6 +22,16 @@ public class ChangelogConfiguration {
     public Pattern unreleasedRowPattern;
 
     public String lastTagFormat;
+
+    public ChangelogConfiguration valid() {
+        if (isEmpty(lastTagFormat) && isEmpty(lastTag)) {
+            throw new IllegalStateException("LastTagFormat or lastTag must be specified");
+        }
+        if (!isEmpty(lastTagFormat) && !isEmpty(lastTag)) {
+            throw new IllegalStateException("Only one of [lastTagFormat, lastTag] might be present");
+        }
+        return this;
+    }
 
     public ChangelogConfiguration setCommitFormat(String commitFormat) {
         this.commitFormat = commitFormat;
@@ -41,6 +53,11 @@ public class ChangelogConfiguration {
         return this;
     }
 
+    public ChangelogConfiguration setLastTag(String lastTag) {
+        this.lastTag = lastTag;
+        return this;
+    }
+
     public ChangelogConfiguration setApplicableCommitPattern(String applicableCommitPattern) {
         this.applicableCommitPattern = Pattern.compile(applicableCommitPattern);
         return this;
@@ -49,6 +66,10 @@ public class ChangelogConfiguration {
     public ChangelogConfiguration setUnreleasedRowPattern(String unreleasedRowPattern) {
         this.unreleasedRowPattern = Pattern.compile(unreleasedRowPattern);
         return this;
+    }
+
+    boolean isEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 
 }

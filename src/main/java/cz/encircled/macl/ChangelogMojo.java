@@ -20,13 +20,20 @@ public class ChangelogMojo extends AbstractMojo {
     protected String pathToChangelog;
 
     /**
-     * Regexp pattern which should be used to match line with latest release version (tag)
+     * Predefined git tag which is used for comparing. Alternatively, <code>lastTagPattern</code> may be used to parse latest tag dynamically.
      */
-    @Parameter(required = true)
+    @Parameter
+    protected String lastTag;
+
+    /**
+     * Regexp pattern which is be used to match line with latest release version (tag). Alternatively, <code>lastTag</code> may be used if tag is predefined.
+     *
+     */
+    @Parameter
     protected String lastTagPattern;
 
     /**
-     * Format (for java <code>String.format(lastTagFormat, lastTagPattern)</code>) which can be used to customize git tag if differs from <code>lastTagPattern</code>
+     * Defines format (for java <code>String.format(lastTagFormat, lastTagPattern)</code>) which is be used to customize git tag if differs from <code>lastTagPattern</code>
      */
     @Parameter(defaultValue = "%s")
     protected String lastTagFormat;
@@ -38,13 +45,13 @@ public class ChangelogMojo extends AbstractMojo {
     protected String applicableCommitPattern;
 
     /**
-     * Additional java <code>String.format(commitMessage, commitFormat)</code> which can be used to customize changelog entry
+     * Additional java <code>String.format(commitMessage, commitFormat)</code> which is used to customize changelog entry
      */
     @Parameter(defaultValue = "%s")
     protected String commitFormat;
 
     /**
-     * Regexp pattern which should be used to match line with 'Unreleased' token
+     * Regexp pattern which is used to match line with 'Unreleased' token
      */
     @Parameter(required = true)
     protected String unreleasedRowPattern;
@@ -56,7 +63,9 @@ public class ChangelogMojo extends AbstractMojo {
                 .setPathToChangelog(pathToChangelog)
                 .setUnreleasedRowPattern(unreleasedRowPattern)
                 .setLastTagFormat(lastTagFormat)
-                .setCommitFormat(commitFormat);
+                .setLastTag(lastTag)
+                .setCommitFormat(commitFormat)
+                .valid();
 
         new ChangelogExecutor(conf, new GitLogParser(conf)).run(getLog());
     }

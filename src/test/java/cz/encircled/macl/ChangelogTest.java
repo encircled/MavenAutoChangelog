@@ -35,12 +35,35 @@ public class ChangelogTest {
     }
 
     @Test
-    public void testLastTag() {
+    public void testLastTagPattern() {
         String lastTag = executor(new ChangelogConfiguration()
                 .setLastTagFormat("%s")
                 .setLastTagPattern("## \\[([\\d.]+)] - [\\d]{4}.[\\d]{2}.[\\d]{2}"))
                 .getLastTag(defaultLines());
         Assert.assertEquals("2017.01", lastTag);
+    }
+
+    @Test
+    public void testLastTag() {
+        String lastTag = executor(new ChangelogConfiguration()
+                .setLastTagFormat("%s")
+                .setLastTagPattern("## \\[([\\d.]+)] - [\\d]{4}.[\\d]{2}.[\\d]{2}")
+                .setLastTag("2017.1.1"))
+                .getLastTag(defaultLines());
+        Assert.assertEquals("2017.1.1", lastTag);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testLastTagIsMissing() {
+        executor(new ChangelogConfiguration().valid());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testLastTagBothPresent() {
+        executor(new ChangelogConfiguration()
+                .setLastTag("123")
+                .setLastTagFormat("123")
+                .valid());
     }
 
     @Test
