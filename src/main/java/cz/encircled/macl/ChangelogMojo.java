@@ -26,7 +26,7 @@ public class ChangelogMojo extends AbstractMojo {
     protected String lastTag;
 
     /**
-     * Regexp pattern which is used to match line with latest release version (tag). Alternatively, <code>lastTag</code> may be used if tag is predefined.
+     * Regex pattern which is used to match line with latest release version (tag). Alternatively, <code>lastTag</code> may be used if tag is predefined.
      *
      */
     @Parameter
@@ -39,7 +39,7 @@ public class ChangelogMojo extends AbstractMojo {
     protected String lastTagFormat;
 
     /**
-     * Regexp pattern which is used to filter unwanted commits, i.e. only commits which match this regexp will be included into changelog
+     * Regex pattern which is used to filter unwanted commits, i.e. only commits which match this regex will be included into changelog
      */
     @Parameter(required = true)
     protected String applicableCommitPattern;
@@ -51,7 +51,7 @@ public class ChangelogMojo extends AbstractMojo {
     protected String commitFormat;
 
     /**
-     * Regexp pattern which is used to match line with 'Unreleased' token
+     * Regex pattern which is used to match line with 'Unreleased' token
      */
     @Parameter(required = true)
     protected String unreleasedRowPattern;
