@@ -26,14 +26,14 @@ public class ChangelogMojo extends AbstractMojo {
     protected String lastTag;
 
     /**
-     * Regexp pattern which is be used to match line with latest release version (tag). Alternatively, <code>lastTag</code> may be used if tag is predefined.
+     * Regexp pattern which is used to match line with latest release version (tag). Alternatively, <code>lastTag</code> may be used if tag is predefined.
      *
      */
     @Parameter
     protected String lastTagPattern;
 
     /**
-     * Defines format (for java <code>String.format(lastTagFormat, lastTagPattern)</code>) which is be used to customize git tag if differs from <code>lastTagPattern</code>
+     * Defines format (for java <code>String.format(lastTagFormat, lastTagPattern)</code>) which is used to customize git tag if differs from <code>lastTagPattern</code>
      */
     @Parameter(defaultValue = "%s")
     protected String lastTagFormat;
