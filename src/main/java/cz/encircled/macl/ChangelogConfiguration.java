@@ -49,7 +49,9 @@ public class ChangelogConfiguration {
     }
 
     public ChangelogConfiguration setLastTagPattern(String lastTagPattern) {
-        this.lastTagPattern = Pattern.compile(lastTagPattern);
+        if (!isEmpty(lastTagPattern)) {
+            this.lastTagPattern = Pattern.compile(lastTagPattern);
+        }
         return this;
     }
 
