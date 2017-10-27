@@ -1,5 +1,7 @@
 package cz.encircled.macl;
 
+import cz.encircled.macl.parser.GitLogParser;
+import cz.encircled.macl.transform.DefaultMessageProcessor;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -67,7 +69,7 @@ public class ChangelogMojo extends AbstractMojo {
                 .setCommitFormat(commitFormat)
                 .valid();
 
-        new ChangelogExecutor(conf, new GitLogParser(conf)).run(getLog());
+        new ChangelogExecutor(conf, new GitLogParser(), new DefaultMessageProcessor(getLog(), conf)).run(getLog());
     }
 
 }
