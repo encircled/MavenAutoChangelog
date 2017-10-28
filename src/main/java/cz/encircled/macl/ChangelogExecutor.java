@@ -1,42 +1,24 @@
 package cz.encircled.macl;
 
+import cz.encircled.macl.parser.VCSLogParser;
+import cz.encircled.macl.transform.*;
+import org.apache.maven.plugin.logging.Log;
+
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.NavigableSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-
-import cz.encircled.macl.parser.VCSLogParser;
-import cz.encircled.macl.transform.MessageFilter;
-import cz.encircled.macl.transform.MessageProcessor;
-import cz.encircled.macl.transform.MessageTransformer;
-import org.apache.maven.plugin.logging.Log;
 
 /**
  * @author Kisel on 22.6.2017.
  */
 public class ChangelogExecutor {
 
-    public static final List<MessageFilter> filters = Arrays.asList(
-            (MessageFilter) (needle, state) -> state.conf.applicableCommitPattern.matcher(needle).matches()
-    );
-
     private final ChangelogConfiguration conf;
 
     private final VCSLogParser vcsLogParser;
-    private static final String NEW_LINE = "\r\n";
-    public static final List<MessageTransformer> transformers = Arrays.asList(
-            (MessageTransformer) (needle, state) -> state.previousMatched == null ? NEW_LINE + needle : needle,
-            (MessageTransformer) (needle, state) -> needle.trim(),
-            (MessageTransformer) (needle, state) -> String.format(state.conf.commitFormat, needle),
-            (MessageTransformer) (needle, state) -> {
-//                TODO "See merge request !1254"
-                return needle;
-            }
-    );
+
+
     private final MessageProcessor messageProcessor;
 
     public ChangelogExecutor(ChangelogConfiguration conf, VCSLogParser vcsLogParser, MessageProcessor messageProcessor) {
@@ -55,7 +37,7 @@ public class ChangelogExecutor {
             String lastTag = getLastTag(allLines);
             log.info("Last tag: " + lastTag);
 
-            NavigableSet<String> newMessages = messageProcessor.getNewMessages(vcsLogParser.getNewMessages(log, lastTag), filters, transformers);
+            NavigableSet<String> newMessages = messageProcessor.getNewMessages(vcsLogParser.getNewMessages(log, lastTag));
             if (newMessages.isEmpty()) {
                 log.info("No new messages");
                 return;

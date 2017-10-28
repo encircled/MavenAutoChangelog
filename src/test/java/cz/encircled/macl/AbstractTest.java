@@ -1,18 +1,15 @@
 package cz.encircled.macl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.NavigableSet;
-import java.util.TreeSet;
-import java.util.concurrent.Callable;
-import java.util.stream.Stream;
-
+import cz.encircled.macl.transform.DefaultMessageProcessor;
+import cz.encircled.macl.transform.GitLabMergeRequestModifier;
+import cz.encircled.macl.transform.MessageProcessor;
 import org.apache.maven.monitor.logging.DefaultLog;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Assert;
+
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.stream.Stream;
 
 /**
  * @author Kisel on 27.10.2017.
@@ -21,6 +18,10 @@ public class AbstractTest {
 
     DefaultLog consoleLog() {
         return new DefaultLog(new ConsoleLogger(0, ""));
+    }
+
+    MessageProcessor defaultMessageProcessor(ChangelogConfiguration conf) {
+        return new DefaultMessageProcessor(consoleLog(), conf, ChangelogMojo.filters, ChangelogMojo.transformers, Collections.singletonList(new GitLabMergeRequestModifier(conf)));
     }
 
     void assertException(Callable<?> callable, String message) {
@@ -34,11 +35,11 @@ public class AbstractTest {
     }
 
     ChangelogExecutor executor(ChangelogConfiguration conf) {
-        return new ChangelogExecutor(conf, (log, tagFrom) -> newMessagesFilteredStream(), (messages, filters, transformers) -> newMessagesFiltered());
+        return new ChangelogExecutor(conf, (log, tagFrom) -> newMessagesFilteredStream(), (messages) -> newMessagesFiltered());
     }
 
     NavigableSet<String> newMessagesFiltered() {
-        return new TreeSet<>(Arrays.asList("(ABC-123) New message 1", "(XYZ-321) New message 2"));
+        return new TreeSet<>(Arrays.asList("(ABC-123) New message 1", "(XYZ-321 777!) New message 2"));
     }
 
     Stream<String> newMessagesFilteredStream() {
@@ -46,9 +47,13 @@ public class AbstractTest {
     }
 
     Stream<String> newMessagesUnfilteredStream() {
-        NavigableSet<String> strings = newMessagesFiltered();
-        strings.addAll(Arrays.asList("Invalid", "Noise commit"));
-        return strings.stream();
+        return newMessagesUnfiltered().stream();
+    }
+
+    Collection<String> newMessagesUnfiltered() {
+        NavigableSet<String> strings = new TreeSet<>(Arrays.asList("(ABC-123) New message 1", "(XYZ-321) New message 2"));
+        strings.addAll(Arrays.asList("See merge request 777!", "Invalid", "Noise commit"));
+        return strings;
     }
 
     List<String> changelog_A() {

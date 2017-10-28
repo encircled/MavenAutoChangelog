@@ -1,13 +1,11 @@
 package cz.encircled.macl.transform;
 
-import java.util.Collection;
-import java.util.NavigableSet;
-import java.util.TreeSet;
-import java.util.stream.Stream;
-
 import cz.encircled.macl.ChangelogConfiguration;
 import cz.encircled.macl.parser.ParsingState;
 import org.apache.maven.plugin.logging.Log;
+
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * @author Kisel on 27.10.2017.
@@ -18,13 +16,21 @@ public class DefaultMessageProcessor implements MessageProcessor {
 
     private final Log log;
 
-    public DefaultMessageProcessor(Log log, ChangelogConfiguration conf) {
+    private final Collection<MessageFilter> filters;
+    private final Collection<MessageTransformer> transformers;
+    private final List<MessageModifier> modifiers;
+
+    public DefaultMessageProcessor(Log log, ChangelogConfiguration conf, List<MessageFilter> filters, List<MessageTransformer> transformers, List<MessageModifier> modifiers) {
         this.conf = conf;
         this.log = log;
+        this.filters = Collections.unmodifiableList(filters);
+        this.transformers = Collections.unmodifiableList(transformers);
+        this.modifiers = Collections.unmodifiableList(modifiers);
     }
 
+
     @Override
-    public NavigableSet<String> getNewMessages(Stream<String> messages, Collection<MessageFilter> filters, Collection<MessageTransformer> transformers) {
+    public NavigableSet<String> getNewMessages(Stream<String> messages) {
         final TreeSet<String> result = new TreeSet<>();
         ParsingState state = new ParsingState(conf);
 
@@ -40,6 +46,14 @@ public class DefaultMessageProcessor implements MessageProcessor {
             for (MessageTransformer transformer : transformers) {
                 m = transformer.transform(m, state);
             }
+
+            for (MessageModifier modifier : modifiers) {
+                if (modifier.accept(m, state)) {
+                    result.pollLast();
+                    result.add(modifier.modify(m, state));
+                }
+            }
+
 
             if (state.isAccepted) {
                 result.add(m);

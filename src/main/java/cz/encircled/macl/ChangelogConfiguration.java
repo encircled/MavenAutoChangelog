@@ -1,5 +1,7 @@
 package cz.encircled.macl;
 
+import cz.encircled.macl.transform.GitLabMergeRequestModifier;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
@@ -21,6 +23,10 @@ public class ChangelogConfiguration {
 
     public Pattern unreleasedRowPattern;
 
+    public Pattern mergeRequestReplacePattern;
+
+    public String mergeRequestReplacement;
+
     public String lastTagFormat;
 
     public ChangelogConfiguration valid() {
@@ -29,6 +35,9 @@ public class ChangelogConfiguration {
         }
         if (!isEmpty(lastTagFormat) && !isEmpty(lastTag)) {
             throw new IllegalStateException("Only one of [lastTagFormat, lastTag] might be present");
+        }
+        if (mergeRequestReplacement == null || !mergeRequestReplacement.contains(GitLabMergeRequestModifier.MR_TOKEN)) {
+            throw new IllegalStateException("mergeRequestReplacement must contain token " + GitLabMergeRequestModifier.MR_TOKEN);
         }
         return this;
     }
@@ -52,6 +61,18 @@ public class ChangelogConfiguration {
         if (!isEmpty(lastTagPattern)) {
             this.lastTagPattern = Pattern.compile(lastTagPattern);
         }
+        return this;
+    }
+
+    public ChangelogConfiguration setMergeRequestReplacePattern(String pattern) {
+        if (!isEmpty(pattern)) {
+            this.mergeRequestReplacePattern = Pattern.compile(pattern);
+        }
+        return this;
+    }
+
+    public ChangelogConfiguration setMergeRequestReplacement(String pattern) {
+        this.mergeRequestReplacement = pattern;
         return this;
     }
 

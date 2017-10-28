@@ -1,6 +1,5 @@
 package cz.encircled.macl.transform;
 
-import java.util.Collection;
 import java.util.NavigableSet;
 import java.util.stream.Stream;
 
@@ -9,6 +8,6 @@ import java.util.stream.Stream;
  */
 public interface MessageProcessor {
 
-    NavigableSet<String> getNewMessages(Stream<String> messages, Collection<MessageFilter> filters, Collection<MessageTransformer> transformers);
+    NavigableSet<String> getNewMessages(Stream<String> messages);
 
 }

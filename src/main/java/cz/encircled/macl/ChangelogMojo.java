@@ -2,6 +2,9 @@ package cz.encircled.macl;
 
 import cz.encircled.macl.parser.GitLogParser;
 import cz.encircled.macl.transform.DefaultMessageProcessor;
+import cz.encircled.macl.transform.GitLabMergeRequestModifier;
+import cz.encircled.macl.transform.MessageFilter;
+import cz.encircled.macl.transform.MessageTransformer;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -9,11 +12,17 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author Kisel on 22.6.2017.
  */
 @Mojo(name = "generate-changelog", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, aggregator = true)
 public class ChangelogMojo extends AbstractMojo {
+
+    private static final String NEW_LINE = "\r\n";
 
     /**
      * Path to changelog file
@@ -29,7 +38,6 @@ public class ChangelogMojo extends AbstractMojo {
 
     /**
      * Regex pattern which is used to match line with latest release version (tag). Alternatively, <code>lastTag</code> may be used if tag is predefined.
-     *
      */
     @Parameter
     protected String lastTagPattern;
@@ -58,6 +66,22 @@ public class ChangelogMojo extends AbstractMojo {
     @Parameter(required = true)
     protected String unreleasedRowPattern;
 
+    @Parameter
+    protected String mergeRequestReplacePattern;
+
+    @Parameter(defaultValue = " MR$1")
+    protected String mergeRequestReplacement;
+
+    public static final List<MessageFilter> filters = Collections.singletonList(
+            (MessageFilter) (needle, state) -> state.conf.applicableCommitPattern.matcher(needle).matches()
+    );
+
+    public static final List<MessageTransformer> transformers = Arrays.asList(
+            (MessageTransformer) (needle, state) -> state.previousMatched == null ? NEW_LINE + needle : needle,
+            (MessageTransformer) (needle, state) -> needle.trim(),
+            (MessageTransformer) (needle, state) -> String.format(state.conf.commitFormat, needle)
+    );
+
     public void execute() throws MojoExecutionException, MojoFailureException {
         ChangelogConfiguration conf = new ChangelogConfiguration()
                 .setApplicableCommitPattern(applicableCommitPattern)
@@ -67,9 +91,12 @@ public class ChangelogMojo extends AbstractMojo {
                 .setLastTagFormat(lastTagFormat)
                 .setLastTag(lastTag)
                 .setCommitFormat(commitFormat)
+                .setMergeRequestReplacePattern(mergeRequestReplacePattern)
+                .setMergeRequestReplacement(mergeRequestReplacement)
                 .valid();
 
-        new ChangelogExecutor(conf, new GitLogParser(), new DefaultMessageProcessor(getLog(), conf)).run(getLog());
+        DefaultMessageProcessor messageProcessor = new DefaultMessageProcessor(getLog(), conf, filters, transformers, Collections.singletonList(new GitLabMergeRequestModifier(conf)));
+        new ChangelogExecutor(conf, new GitLogParser(), messageProcessor).run(getLog());
     }
 
 }
