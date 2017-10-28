@@ -68,7 +68,7 @@ public class ChangelogMojo extends AbstractMojo {
 
     /**
      * Regex pattern which is used to add merge request numbers to the messages. It must match the group which will be referenced in <code>mergeRequestReplacement</code>.
-     * For example "(])" to add merge requests before first "]" like <code>[ABC-123] Text  ->  [ABC-123 321!] Text</code>.
+     * For example "(])" to add merge requests before first "]" like <code>[ABC-123] Text  -&gt;  [ABC-123 321!] Text</code>.
      */
     @Parameter
     protected String mergeRequestReplacePattern;
