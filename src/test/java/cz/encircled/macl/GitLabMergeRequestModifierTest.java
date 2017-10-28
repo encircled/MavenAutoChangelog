@@ -46,7 +46,7 @@ public class GitLabMergeRequestModifierTest {
 
     private ChangelogConfiguration conf() {
         return new ChangelogConfiguration()
-                .setMergeRequestReplacement(" MR$1")
+                .setMergeRequestReplacement(" MR#$1")
                 .setMergeRequestReplacePattern("(])");
     }
 

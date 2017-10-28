@@ -8,7 +8,7 @@ import cz.encircled.macl.parser.ParsingState;
  */
 public class GitLabMergeRequestModifier implements MessageModifier {
 
-    public static final String MR_TOKEN = "MR";
+    public static final String MR_TOKEN = "MR#";
 
     private final ChangelogConfiguration conf;
 

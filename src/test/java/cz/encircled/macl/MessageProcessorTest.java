@@ -46,7 +46,7 @@ public class MessageProcessorTest extends AbstractTest {
         return new ChangelogConfiguration()
                 .setCommitFormat("%s")
                 .setMergeRequestReplacePattern("(\\))")
-                .setMergeRequestReplacement(" MR$1")
+                .setMergeRequestReplacement(" MR#$1")
                 .setApplicableCommitPattern(applicableCommitPattern);
     }
 
