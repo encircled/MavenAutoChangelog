@@ -14,7 +14,7 @@ public class GitLabMergeRequestModifierTest {
     public void testAccept() {
         GitLabMergeRequestModifier modifier = new GitLabMergeRequestModifier(conf());
 
-        Assert.assertTrue(modifier.accept("See merge request 123!", state()));
+        Assert.assertTrue(modifier.accept("- See merge request 123!", state()));
         Assert.assertTrue(modifier.accept("See merge request 1!", state()));
         Assert.assertFalse(modifier.accept("(123) Commit", state()));
         Assert.assertFalse(modifier.accept("Test commit", state()));
@@ -23,9 +23,9 @@ public class GitLabMergeRequestModifierTest {
     @Test
     public void testModify() {
         GitLabMergeRequestModifier modifier = new GitLabMergeRequestModifier(conf());
-        String result = modifier.modify("See merge request 123!", state());
+        String result = modifier.modify("- See merge request 125!", state());
 
-        Assert.assertEquals("[Test 123!] commit", result);
+        Assert.assertEquals("[Test 125!] commit", result);
     }
 
     @Test

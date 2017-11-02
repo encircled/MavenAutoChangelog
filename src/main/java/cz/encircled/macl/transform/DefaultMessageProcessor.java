@@ -5,7 +5,6 @@ import cz.encircled.macl.parser.ParsingState;
 import org.apache.maven.plugin.logging.Log;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * @author Kisel on 27.10.2017.
@@ -30,7 +29,7 @@ public class DefaultMessageProcessor implements MessageProcessor {
 
 
     @Override
-    public NavigableSet<String> getNewMessages(Stream<String> messages) {
+    public NavigableSet<String> getNewMessages(NavigableSet<String> messages) {
         final TreeSet<String> result = new TreeSet<>();
         ParsingState state = new ParsingState(conf);
 

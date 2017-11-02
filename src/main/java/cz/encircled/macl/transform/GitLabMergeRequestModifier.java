@@ -18,7 +18,7 @@ public class GitLabMergeRequestModifier implements MessageModifier {
 
     @Override
     public boolean accept(String currentLine, ParsingState state) {
-        return conf.mergeRequestReplacePattern != null && currentLine.startsWith("See merge request ");
+        return conf.mergeRequestReplacePattern != null && currentLine.contains("See merge request ");
     }
 
     @Override

@@ -9,7 +9,6 @@ import org.junit.Assert;
 
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.stream.Stream;
 
 /**
  * @author Kisel on 27.10.2017.
@@ -35,22 +34,14 @@ public class AbstractTest {
     }
 
     ChangelogExecutor executor(ChangelogConfiguration conf) {
-        return new ChangelogExecutor(conf, (log, tagFrom) -> newMessagesFilteredStream(), (messages) -> newMessagesFiltered());
+        return new ChangelogExecutor(conf, (log, tagFrom) -> newMessagesFiltered(), (messages) -> newMessagesFiltered());
     }
 
     NavigableSet<String> newMessagesFiltered() {
         return new TreeSet<>(Arrays.asList("(ABC-123) New message 1", "(XYZ-321 777!) New message 2"));
     }
 
-    Stream<String> newMessagesFilteredStream() {
-        return newMessagesFiltered().stream();
-    }
-
-    Stream<String> newMessagesUnfilteredStream() {
-        return newMessagesUnfiltered().stream();
-    }
-
-    Collection<String> newMessagesUnfiltered() {
+    NavigableSet<String> newMessagesUnfiltered() {
         NavigableSet<String> strings = new TreeSet<>(Arrays.asList("(ABC-123) New message 1", "(XYZ-321) New message 2"));
         strings.addAll(Arrays.asList("See merge request 777!", "Invalid", "Noise commit"));
         return strings;

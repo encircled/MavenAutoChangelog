@@ -3,10 +3,7 @@ package cz.encircled.macl;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author Kisel on 27.10.2017.
@@ -17,7 +14,7 @@ public class MessageProcessorTest extends AbstractTest {
     public void testFilteredAndMergeRequestAdded() {
         ChangelogConfiguration conf = processorConf("^\\(.*$");
         NavigableSet<String> result = defaultMessageProcessor(conf)
-                .getNewMessages(newMessagesUnfilteredStream());
+                .getNewMessages(newMessagesUnfiltered());
 
         Assert.assertEquals(newMessagesFiltered(), result);
     }
@@ -25,7 +22,7 @@ public class MessageProcessorTest extends AbstractTest {
     @Test
     public void testTrim() {
         NavigableSet<String> result = defaultMessageProcessor(processorConf(".*"))
-                .getNewMessages(s(" test ").stream());
+                .getNewMessages(s(" test "));
 
         Assert.assertEquals(s("test"), result);
     }
@@ -33,12 +30,12 @@ public class MessageProcessorTest extends AbstractTest {
     @Test
     public void testCommitFormat() {
         NavigableSet<String> result = defaultMessageProcessor(processorConf(".*").setCommitFormat("my-%s-format"))
-                .getNewMessages(s(" test ").stream());
+                .getNewMessages(s(" test "));
 
         Assert.assertEquals(s("my-test-format"), result);
     }
 
-    private Collection<String> s(String s) {
+    private NavigableSet<String> s(String s) {
         return new TreeSet<>(Collections.singletonList(s));
     }
 
