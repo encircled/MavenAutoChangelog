@@ -1,14 +1,20 @@
 package cz.encircled.macl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.concurrent.Callable;
+
 import cz.encircled.macl.transform.DefaultMessageProcessor;
 import cz.encircled.macl.transform.GitLabMergeRequestModifier;
 import cz.encircled.macl.transform.MessageProcessor;
 import org.apache.maven.monitor.logging.DefaultLog;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Assert;
-
-import java.util.*;
-import java.util.concurrent.Callable;
 
 /**
  * @author Kisel on 27.10.2017.
@@ -20,7 +26,8 @@ public class AbstractTest {
     }
 
     MessageProcessor defaultMessageProcessor(ChangelogConfiguration conf) {
-        return new DefaultMessageProcessor(consoleLog(), conf, ChangelogMojo.filters, ChangelogMojo.transformers, Collections.singletonList(new GitLabMergeRequestModifier(conf)));
+        return new DefaultMessageProcessor(consoleLog(), conf, ChangelogMojo.filters, ChangelogMojo.transformers,
+                Collections.singletonList(new GitLabMergeRequestModifier(conf)));
     }
 
     void assertException(Callable<?> callable, String message) {
@@ -37,14 +44,13 @@ public class AbstractTest {
         return new ChangelogExecutor(conf, (log, tagFrom) -> newMessagesFiltered(), (messages) -> newMessagesFiltered());
     }
 
-    NavigableSet<String> newMessagesFiltered() {
-        return new TreeSet<>(Arrays.asList("(ABC-123) New message 1", "(XYZ-321 777!) New message 2"));
+    Set<String> newMessagesFiltered() {
+        return new LinkedHashSet<>(Arrays.asList("(ABC-123 123!) New message 1", "(XYZ-321 777!) New message 2"));
     }
 
-    NavigableSet<String> newMessagesUnfiltered() {
-        NavigableSet<String> strings = new TreeSet<>(Arrays.asList("(ABC-123) New message 1", "(XYZ-321) New message 2"));
-        strings.addAll(Arrays.asList("See merge request 777!", "Invalid", "Noise commit"));
-        return strings;
+    Set<String> newMessagesUnfiltered() {
+        return new LinkedHashSet<>(Arrays.asList("(ABC-123) New message 1", "See merge request 123!",
+                "(XYZ-321) New message 2", "See merge request 777!", "Noise commit"));
     }
 
     List<String> changelog_A() {

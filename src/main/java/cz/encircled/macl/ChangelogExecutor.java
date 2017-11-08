@@ -1,13 +1,15 @@
 package cz.encircled.macl;
 
-import cz.encircled.macl.parser.VCSLogParser;
-import cz.encircled.macl.transform.*;
-import org.apache.maven.plugin.logging.Log;
-
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+
+import cz.encircled.macl.parser.VCSLogParser;
+import cz.encircled.macl.transform.MessageProcessor;
+import org.apache.maven.plugin.logging.Log;
 
 /**
  * @author Kisel on 22.6.2017.
@@ -37,7 +39,7 @@ public class ChangelogExecutor {
             String lastTag = getLastTag(allLines);
             log.info("Last tag: " + lastTag);
 
-            NavigableSet<String> newMessages = messageProcessor.getNewMessages(vcsLogParser.getNewMessages(log, lastTag));
+            Collection<String> newMessages = messageProcessor.getNewMessages(vcsLogParser.getNewMessages(log, lastTag));
             if (newMessages.isEmpty()) {
                 log.info("No new messages");
                 return;
