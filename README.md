@@ -16,6 +16,8 @@ Maven plugin properties:
 - *applicableCommitPattern* - Regexp pattern which is used to filter unwanted commits, i.e. only commits which match this regexp will be included into changelog
 - *commitFormat* - Additional java `String.format(commitMessage, commitFormat)` which can be used to customize changelog entry. Default is `%s`
 - *unreleasedRowPattern* - Regexp pattern which should be used to match line with 'Unreleased' token
+- *mergeRequestReplacePattern* - Regex pattern which is used to add merge request numbers to the messages. It must match the group which will be referenced in `mergeRequestReplacement`. For example `(])` to add merge requests before first `]` like `[ABC-123] Text  -&gt;  [ABC-123 321!] Text`.                                      
+- *mergeRequestReplacement* - Replacement string which will be used with `mergeRequestReplacePattern`. Must contain token `MR#`, which will be replaced by merge request number. Default is " MR#$1"
 
 ### Sample
 For example you have a CHANGELOG.md looking like
@@ -23,10 +25,10 @@ For example you have a CHANGELOG.md looking like
 [Unreleased]
 
 [1.02] - 2017.01.02
-- (FIX) Critical bug fix
-- (FEATURE) Some cool feature
+- (FIX 20!) Critical bug fix
+- (FEATURE 18!) Some cool feature
 [1.01] - 2017.01.01
-- (FEATURE) Some cool feature
+- (FEATURE 16!) Some cool feature
 ```
 
 Your configuration may look like:
@@ -34,3 +36,4 @@ Your configuration may look like:
 - *lastTagPattern* - `.*[\d.] - .*`
 - *applicableCommitPattern* - `\(.*).*`
 - *commitFormat* - `- %s`
+- *mergeRequestReplacePattern* - `(\\))`
