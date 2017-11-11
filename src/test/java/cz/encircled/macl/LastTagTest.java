@@ -10,21 +10,21 @@ public class LastTagTest extends AbstractTest {
 
     @Test
     public void testLastTagPattern() {
-        String lastTag = executor(new ChangelogConfiguration()
+        Pair<String, Integer> lastTag = executor(new ChangelogConfiguration()
                 .setLastTagFormat("%s")
                 .setLastTagPattern("## \\[([\\d.]+)] - [\\d]{4}.[\\d]{2}.[\\d]{2}"))
                 .getLastTag(changelog_A());
-        Assert.assertEquals("2017.03", lastTag);
+        Assert.assertEquals(Pair.of("2017.03", 6), lastTag);
     }
 
     @Test
     public void testLastTag() {
-        String lastTag = executor(new ChangelogConfiguration()
+        Pair<String, Integer> lastTag = executor(new ChangelogConfiguration()
                 .setLastTagFormat("%s")
                 .setLastTagPattern("## \\[([\\d.]+)] - [\\d]{4}.[\\d]{2}.[\\d]{2}")
                 .setLastTag("my_2017.1.1"))
                 .getLastTag(changelog_A());
-        Assert.assertEquals("my_2017.1.1", lastTag);
+        Assert.assertEquals(Pair.of("my_2017.1.1", null), lastTag);
     }
 
     @Test
@@ -47,11 +47,11 @@ public class LastTagTest extends AbstractTest {
 
     @Test
     public void testLastFormat() {
-        String lastTag = executor(new ChangelogConfiguration()
+        Pair<String, Integer> lastTag = executor(new ChangelogConfiguration()
                 .setLastTagFormat("prefix-%s")
                 .setLastTagPattern("## \\[([\\d.]+)] - [\\d]{4}.[\\d]{2}.[\\d]{2}"))
                 .getLastTag(changelog_A());
-        Assert.assertEquals("prefix-2017.03", lastTag);
+        Assert.assertEquals(Pair.of("prefix-2017.03", 6), lastTag);
     }
 
 }

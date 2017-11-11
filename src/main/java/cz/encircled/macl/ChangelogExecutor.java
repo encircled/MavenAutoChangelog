@@ -1,15 +1,16 @@
 package cz.encircled.macl;
 
+import cz.encircled.macl.parser.VCSLogParser;
+import cz.encircled.macl.transform.MessageProcessor;
+import org.apache.maven.plugin.logging.Log;
+
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-
-import cz.encircled.macl.parser.VCSLogParser;
-import cz.encircled.macl.transform.MessageProcessor;
-import org.apache.maven.plugin.logging.Log;
 
 /**
  * @author Kisel on 22.6.2017.
@@ -36,10 +37,10 @@ public class ChangelogExecutor {
 
             List<String> allLines = Files.lines(conf.pathToChangelog).map(String::trim).collect(Collectors.toList());
 
-            String lastTag = getLastTag(allLines);
+            Pair<String, Integer> lastTag = getLastTag(allLines);
             log.info("Last tag: " + lastTag);
 
-            Collection<String> newMessages = messageProcessor.getNewMessages(vcsLogParser.getNewMessages(log, lastTag));
+            Set<String> newMessages = messageProcessor.getNewMessages(vcsLogParser.getNewMessages(log, lastTag.getLeft()));
             if (newMessages.isEmpty()) {
                 log.info("No new messages");
                 return;
@@ -50,7 +51,7 @@ public class ChangelogExecutor {
             log.info("Count of new messages: " + newMessages.size());
             log.debug("Index of 'Unreleased' line: " + unreleasedIndex);
 
-            List<String> resultLines = insertNewMessages(allLines, newMessages, unreleasedIndex);
+            List<String> resultLines = insertNewMessages(allLines, newMessages, unreleasedIndex, lastTag.getRight());
 
             Files.write(conf.pathToChangelog, resultLines);
         } catch (Exception e) {
@@ -58,26 +59,38 @@ public class ChangelogExecutor {
         }
     }
 
-    public List<String> insertNewMessages(List<String> allLines, Collection<String> newMessages, int unreleasedIndex) {
-        List<String> resultLines = new ArrayList<>(allLines.size() + newMessages.size());
+    public List<String> insertNewMessages(List<String> allLines, Collection<String> newMessages, int unreleasedIndex, Integer lastTagIndex) {
         int afterUnreleased = unreleasedIndex + 1;
-        resultLines.addAll(allLines.subList(0, afterUnreleased));
-        resultLines.addAll(newMessages);
+        List<String> linesToInsert = new ArrayList<>();
 
-        int fromIndex = allLines.get(afterUnreleased).isEmpty() ? unreleasedIndex + 2 : afterUnreleased;
-        resultLines.addAll(allLines.subList(fromIndex, allLines.size()));
-        return resultLines;
+        // append new messages skipping duplicates
+        List<String> present = new ArrayList<>(allLines.subList(afterUnreleased, lastTagIndex));
+        newMessages.stream().filter(m -> !present.contains(m)).forEach(linesToInsert::add);
+
+        // append messages which are present in 'Unresolved' already
+        // Preserve leading empty line if present
+        if (present.get(0).isEmpty()) {
+            linesToInsert.add(0, "");
+            present.remove(0);
+        }
+        linesToInsert.addAll(present);
+
+        List<String> result = new ArrayList<>(allLines.subList(0, afterUnreleased));
+        result.addAll(linesToInsert);
+        result.addAll(allLines.subList(lastTagIndex, allLines.size()));
+
+        return result;
     }
 
-    public String getLastTag(List<String> allLines) {
+    public Pair<String, Integer> getLastTag(List<String> allLines) {
         if (conf.lastTag != null) {
-            return conf.lastTag;
+            return Pair.of(conf.lastTag, null);
         }
 
-        for (String line : allLines) {
-            Matcher matcher = conf.lastTagPattern.matcher(line);
+        for (int i = 0; i < allLines.size(); i++) {
+            Matcher matcher = conf.lastTagPattern.matcher(allLines.get(i));
             if (matcher.matches()) {
-                return String.format(conf.lastTagFormat, matcher.group(1));
+                return Pair.of(String.format(conf.lastTagFormat, matcher.group(1)), i);
             }
         }
 
