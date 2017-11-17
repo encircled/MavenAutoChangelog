@@ -1,5 +1,6 @@
 language: java
 sudo: false # faster builds
+install: mvn dependency:resolve
 script: mvn clean test
 
 after_success:
