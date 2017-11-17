@@ -15,30 +15,28 @@ import java.nio.file.Paths;
  */
 public class ExecutorTest extends AbstractTest {
 
+    private String path;
+
     @Before
     public void before() {
-        Assume.assumeTrue(new File(path()).canWrite());
-
-        File file = new File(path());
-        if (file.exists()) {
-            file.delete();
-        }
-
+        File file;
         try {
-            file.createNewFile();
+            file = File.createTempFile("test-changelog", "md");
+            path = file.getPath();
+            try {
+                Files.write(Paths.get(path), changelog_A(newMessagesUnfiltered()), Charset.forName("UTF-8"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        try {
-            Files.write(Paths.get(path()), changelog_A(newMessagesUnfiltered()), Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
     @Test
     public void endToEndTest() {
+        Assume.assumeNotNull(path);
+
         executor(
                 new ChangelogConfiguration()
                         .setMergeRequestReplacePattern("(\\])")
@@ -46,14 +44,10 @@ public class ExecutorTest extends AbstractTest {
                         .setCommitFormat(".*")
                         .setLastTagPattern(".*\\[([\\d\\.]+)].*")
                         .setLastTagFormat("%s")
-                        .setPathToChangelog(path())
+                        .setPathToChangelog(path)
                         .setUnreleasedRowPattern("## \\[Unreleased]")
                         .setApplicableCommitPattern(".*\\(.*")
         ).run(consoleLog());
-    }
-
-    private String path() {
-        return "target\\test-changelog.md";
     }
 
 }
