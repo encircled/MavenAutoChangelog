@@ -22,7 +22,7 @@ import java.util.List;
 @Mojo(name = "generate-changelog", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, aggregator = true)
 public class ChangelogMojo extends AbstractMojo {
 
-    private static final String NEW_LINE = "\r\n";
+    private static final String NEW_LINE = System.getProperty("line.separator");
 
     /**
      * Path to changelog file

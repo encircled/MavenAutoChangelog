@@ -4,7 +4,10 @@ import cz.encircled.macl.parser.VCSLogParser;
 import cz.encircled.macl.transform.MessageProcessor;
 import org.apache.maven.plugin.logging.Log;
 
+import java.io.BufferedWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -53,7 +56,14 @@ public class ChangelogExecutor {
 
             List<String> resultLines = insertNewMessages(allLines, newMessages, unreleasedIndex, lastTag.getRight());
 
-            Files.write(conf.pathToChangelog, resultLines);
+            try (BufferedWriter writer = Files.newBufferedWriter(conf.pathToChangelog,
+                    StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
+                for (String line : resultLines) {
+                    writer.write(line);
+                    writer.write('\n');
+                }
+                writer.flush();
+            }
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
