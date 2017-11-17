@@ -1,5 +1,6 @@
 package cz.encircled.macl;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 

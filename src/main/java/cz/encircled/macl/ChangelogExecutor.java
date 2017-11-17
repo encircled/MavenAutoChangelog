@@ -2,6 +2,7 @@ package cz.encircled.macl;
 
 import cz.encircled.macl.parser.VCSLogParser;
 import cz.encircled.macl.transform.MessageProcessor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.maven.plugin.logging.Log;
 
 import java.io.BufferedWriter;
