@@ -1,3 +1,5 @@
+https://travis-ci.org/encircled/MavenAutoChangelog.svg?branch=master
+
 # Changelog auto generator - maven plugin
 MavenAutoChangelog is a simple maven plugin which generates changelog entries from git commit messages.
 
