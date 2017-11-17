@@ -1,7 +1,7 @@
 language: java
 sudo: false # faster builds
-install: mvn dependency:resolve
-script: mvn clean test
+install: mvn clean dependency:resolve
+script: mvn test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t 8f838bbd-6b64-453f-90f5-ec2e44d2b626
