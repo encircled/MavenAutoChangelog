@@ -90,7 +90,14 @@ public class ChangelogMojo extends AbstractMojo {
     );
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        ChangelogConfiguration conf = new ChangelogConfiguration()
+        ChangelogConfiguration conf = getChangelogConfiguration();
+
+        DefaultMessageProcessor messageProcessor = new DefaultMessageProcessor(getLog(), conf, filters, transformers, Collections.singletonList(new GitLabMergeRequestModifier(conf)));
+        new ChangelogExecutor(conf, new GitLogParser(new DefaultCommandExecutor()), messageProcessor).run(getLog());
+    }
+
+    public ChangelogConfiguration getChangelogConfiguration() {
+        return new ChangelogConfiguration()
                 .setApplicableCommitPattern(applicableCommitPattern)
                 .setLastTagPattern(lastTagPattern)
                 .setPathToChangelog(pathToChangelog)
@@ -101,9 +108,6 @@ public class ChangelogMojo extends AbstractMojo {
                 .setMergeRequestReplacePattern(mergeRequestReplacePattern)
                 .setMergeRequestReplacement(mergeRequestReplacement)
                 .valid();
-
-        DefaultMessageProcessor messageProcessor = new DefaultMessageProcessor(getLog(), conf, filters, transformers, Collections.singletonList(new GitLabMergeRequestModifier(conf)));
-        new ChangelogExecutor(conf, new GitLogParser(), messageProcessor).run(getLog());
     }
 
 }
