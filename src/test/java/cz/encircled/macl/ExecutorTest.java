@@ -1,5 +1,6 @@
 package cz.encircled.macl;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,6 +37,8 @@ public class ExecutorTest extends AbstractTest {
 
     @Test
     public void endToEndTest() {
+        Assume.assumeTrue(new File(path()).canWrite());
+
         executor(
                 new ChangelogConfiguration()
                         .setMergeRequestReplacePattern("(\\])")
