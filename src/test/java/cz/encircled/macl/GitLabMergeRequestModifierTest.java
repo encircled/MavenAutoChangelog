@@ -11,6 +11,12 @@ import org.junit.Test;
 public class GitLabMergeRequestModifierTest {
 
     @Test
+    public void testAcceptNull() {
+        GitLabMergeRequestModifier modifier = new GitLabMergeRequestModifier(new ChangelogConfiguration());
+        Assert.assertFalse(modifier.accept("- See merge request 123!", state()));
+    }
+
+    @Test
     public void testAccept() {
         GitLabMergeRequestModifier modifier = new GitLabMergeRequestModifier(conf());
 

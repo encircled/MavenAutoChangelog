@@ -1,6 +1,6 @@
 language: java
 sudo: false # faster builds
-script: mvn clean verify
+script: mvn clean test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t 8f838bbd-6b64-453f-90f5-ec2e44d2b626
