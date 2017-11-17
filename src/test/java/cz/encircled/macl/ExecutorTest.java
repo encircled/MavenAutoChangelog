@@ -53,7 +53,7 @@ public class ExecutorTest extends AbstractTest {
     }
 
     private String path() {
-        return System.getProperty("java.io.tmpdir") + "test-changelog.md";
+        return "target\\test-changelog.md";
     }
 
 }
