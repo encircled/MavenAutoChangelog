@@ -17,6 +17,8 @@ public class ExecutorTest extends AbstractTest {
 
     @Before
     public void before() {
+        Assume.assumeTrue(new File(path()).canWrite());
+
         File file = new File(path());
         if (file.exists()) {
             file.delete();
@@ -37,8 +39,6 @@ public class ExecutorTest extends AbstractTest {
 
     @Test
     public void endToEndTest() {
-        Assume.assumeTrue(new File(path()).canWrite());
-
         executor(
                 new ChangelogConfiguration()
                         .setMergeRequestReplacePattern("(\\])")
