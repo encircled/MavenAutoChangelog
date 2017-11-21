@@ -1,20 +1,13 @@
 package cz.encircled.macl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.LinkedHashSet;
-import java.util.concurrent.Callable;
-
 import cz.encircled.macl.transform.DefaultMessageProcessor;
 import cz.encircled.macl.transform.GitLabMergeRequestModifier;
 import cz.encircled.macl.transform.MessageProcessor;
 import org.apache.maven.monitor.logging.DefaultLog;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Assert;
+
+import java.util.*;
 
 /**
  * @author Kisel on 27.10.2017.
@@ -30,9 +23,9 @@ public class AbstractTest {
                 Collections.singletonList(new GitLabMergeRequestModifier(conf)));
     }
 
-    void assertException(Callable<?> callable, String message) {
+    void assertException(Runnable callable, String message) {
         try {
-            callable.call();
+            callable.run();
         } catch (Exception e) {
             Assert.assertEquals(e.getMessage(), message);
             return;

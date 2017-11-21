@@ -55,4 +55,15 @@ public class LastTagTest extends AbstractTest {
         Assert.assertEquals(Pair.of("prefix-2017.03", 6), lastTag);
     }
 
+    @Test
+    public void testTagNotFound() {
+        assertException(() -> {
+                    executor(new ChangelogConfiguration()
+                            .setLastTagFormat("%s")
+                            .setLastTagPattern("NOT_EXISTS"))
+                            .getLastTag(changelog_A());
+                },
+                "Last tag not found for pattern NOT_EXISTS");
+    }
+
 }
