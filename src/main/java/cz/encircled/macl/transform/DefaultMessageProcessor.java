@@ -54,7 +54,7 @@ public class DefaultMessageProcessor implements MessageProcessor {
             }
 
             for (MessageModifier modifier : modifiers) {
-                if (modifier.accept(m, state)) {
+                if (state.previousMatched != null && modifier.accept(m, state)) {
                     result.remove(result.size() - 1);
                     result.add(modifier.modify(m, state));
                 }
