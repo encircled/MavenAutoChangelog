@@ -31,7 +31,7 @@ public class GitLogParser implements VCSLogParser {
         try (BufferedReader input = new BufferedReader(new InputStreamReader(commandExecutor.exec(command)))) {
             return input.lines().collect(Collectors.toCollection(LinkedHashSet::new));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to read changelog file", e);
         }
     }
 
