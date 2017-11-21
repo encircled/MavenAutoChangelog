@@ -49,7 +49,7 @@ public class AbstractTest {
     }
 
     Set<String> newMessagesUnfiltered() {
-        return new LinkedHashSet<>(Arrays.asList("(ABC-123) New message 1", "See merge request 123!",
+        return new LinkedHashSet<>(Arrays.asList("Some noise commit", "See merge request 1!", "(ABC-123) New message 1", "See merge request 123!",
                 "(XYZ-321) New message 2", "See merge request 777!", "Noise commit"));
     }
 
