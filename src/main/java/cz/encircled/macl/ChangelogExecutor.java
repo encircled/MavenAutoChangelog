@@ -57,14 +57,15 @@ public class ChangelogExecutor {
 
             List<String> resultLines = insertNewMessages(allLines, newMessages, unreleasedIndex, lastTag.getRight());
 
-            try (BufferedWriter writer = Files.newBufferedWriter(conf.pathToChangelog,
-                    StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
-                for (String line : resultLines) {
-                    writer.write(line);
-                    writer.write('\n');
-                }
-                writer.flush();
-            }
+//            try (BufferedWriter writer = Files.newBufferedWriter(conf.pathToChangelog,
+//                    StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
+//                for (String line : resultLines) {
+//                    writer.write(line);
+//                    writer.write('\n');
+//                }
+//                writer.flush();
+//            }
+            Files.write(conf.pathToChangelog, resultLines);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
