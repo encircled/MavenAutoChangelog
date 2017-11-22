@@ -11,7 +11,9 @@ public class ParsingState {
 
     public String previousMatched;
 
-    public Boolean isAccepted;
+    public boolean isPreviousAccepted;
+
+    public boolean isAccepted;
 
     public ParsingState(ChangelogConfiguration conf) {
         this.conf = conf;

@@ -1,15 +1,10 @@
 package cz.encircled.macl.transform;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import cz.encircled.macl.ChangelogConfiguration;
 import cz.encircled.macl.parser.ParsingState;
 import org.apache.maven.plugin.logging.Log;
+
+import java.util.*;
 
 /**
  * @author Kisel on 27.10.2017.
@@ -54,7 +49,7 @@ public class DefaultMessageProcessor implements MessageProcessor {
             }
 
             for (MessageModifier modifier : modifiers) {
-                if (state.previousMatched != null && modifier.accept(m, state)) {
+                if (state.isPreviousAccepted && modifier.accept(m, state)) {
                     result.remove(result.size() - 1);
                     result.add(modifier.modify(m, state));
                 }
@@ -67,6 +62,7 @@ public class DefaultMessageProcessor implements MessageProcessor {
             } else {
                 log.info("Message [" + m + "] excluded");
             }
+            state.isPreviousAccepted = state.isAccepted;
             state.isAccepted = false;
         });
 

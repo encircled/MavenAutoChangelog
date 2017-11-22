@@ -1,5 +1,6 @@
 package cz.encircled.macl;
 
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * @author Vlad on 01-Nov-17.
@@ -48,6 +50,14 @@ public class ExecutorTest extends AbstractTest {
                         .setUnreleasedRowPattern("## \\[Unreleased]")
                         .setApplicableCommitPattern(".*\\(.*")
         ).run(consoleLog());
+
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(path));
+            // Test duplication
+            Assert.assertEquals(1, lines.stream().filter(s -> s.contains("Unreleased")).count());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
