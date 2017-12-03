@@ -21,6 +21,7 @@ Maven plugin properties:
 - *unreleasedRowPattern* - Regexp pattern which should be used to match line with 'Unreleased' token
 - *mergeRequestReplacePattern* - Regex pattern which is used to add merge request numbers to the messages. It must match the group which will be referenced in `mergeRequestReplacement`. For example `(])` to add merge requests before first `]` like `[ABC-123] Text  ==>  [ABC-123 321!] Text`.                                      
 - *mergeRequestReplacement* - Replacement string which will be used with `mergeRequestReplacePattern`. Must contain token `MR#`, which will be replaced by merge request number. Default is " MR#$1"
+- *incrementVersionAfterRun* - If true, add line with auto-incremented version after changelog generation
 
 ### Sample
 For example you have a CHANGELOG.md looking like
