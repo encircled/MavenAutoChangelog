@@ -55,7 +55,7 @@ public class ChangelogExecutor {
             log.info("Count of new messages: " + newMessages.size());
             log.debug("Index of 'Unreleased' line: " + unreleasedIndex);
 
-            List<String> resultLines = insertNewMessages(allLines, newMessages, unreleasedIndex, lastTag.getRight());
+            List<String> resultLines = insertNewMessages(allLines, newMessages, unreleasedIndex, lastTag);
 
             try (BufferedWriter writer = Files.newBufferedWriter(conf.pathToChangelog,
                     StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)) {
@@ -70,12 +70,21 @@ public class ChangelogExecutor {
         }
     }
 
-    public List<String> insertNewMessages(List<String> allLines, Collection<String> newMessages, int unreleasedIndex, Integer lastTagIndex) {
+    public List<String> insertNewMessages(List<String> allLines, Collection<String> newMessages, int unreleasedIndex, Pair<String, Integer> lastTag) {
         int afterUnreleased = unreleasedIndex + 1;
         List<String> linesToInsert = new ArrayList<>();
 
+        if (conf.incrementVersionAfterRun == Boolean.TRUE) {
+            // append new version line
+            linesToInsert.add("");
+            String incremented = incrementLastTag(lastTag.getLeft());
+            String s = allLines.get(lastTag.getRight()).replaceFirst(lastTag.getLeft(), incremented);
+            linesToInsert.add(s);
+            linesToInsert.add("");
+        }
+
         // append new messages skipping duplicates
-        List<String> present = new ArrayList<>(allLines.subList(afterUnreleased, lastTagIndex));
+        List<String> present = new ArrayList<>(allLines.subList(afterUnreleased, lastTag.getRight()));
         newMessages.stream().filter(m -> !present.contains(m)).forEach(linesToInsert::add);
 
         // append messages which are present in 'Unresolved' already
@@ -88,9 +97,39 @@ public class ChangelogExecutor {
 
         List<String> result = new ArrayList<>(allLines.subList(0, afterUnreleased));
         result.addAll(linesToInsert);
-        result.addAll(allLines.subList(lastTagIndex, allLines.size()));
+        result.addAll(allLines.subList(lastTag.getRight(), allLines.size()));
 
         return result;
+    }
+
+    public String incrementLastTag(String lastTag) {
+        StringBuilder result = new StringBuilder(lastTag);
+
+        Integer start = null, end = null;
+        int i = result.length() - 1;
+
+        while (i >= 0 && start == null) {
+            if (end == null && Character.isDigit(result.charAt(i))) {
+                end = i + 1;
+            }
+            if (end != null && !Character.isDigit(result.charAt(i))) {
+                start = i + 1;
+            }
+            i--;
+        }
+
+        if (start == null) {
+            start = 0;
+        }
+
+        if (end == null) {
+            throw new IllegalStateException("Can't find version number in the last tag");
+        }
+
+        int version = Integer.parseInt(result.substring(start, end));
+        result.replace(start, end, Integer.toString(++version));
+
+        return result.toString();
     }
 
     public Pair<String, Integer> getLastTag(List<String> allLines) {

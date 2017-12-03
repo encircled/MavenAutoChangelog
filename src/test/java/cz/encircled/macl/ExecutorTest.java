@@ -44,6 +44,7 @@ public class ExecutorTest extends AbstractTest {
                         .setMergeRequestReplacePattern("(\\])")
                         .setMergeRequestReplacement(" MR#$1)")
                         .setCommitFormat(".*")
+                        .setIncrementVersionAfterRun("true")
                         .setLastTagPattern(".*\\[([\\d\\.]+)].*")
                         .setLastTagFormat("%s")
                         .setPathToChangelog(path)

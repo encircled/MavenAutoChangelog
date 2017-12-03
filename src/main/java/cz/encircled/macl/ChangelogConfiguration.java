@@ -29,6 +29,8 @@ public class ChangelogConfiguration {
 
     public String lastTagFormat;
 
+    public Boolean incrementVersionAfterRun;
+
     public ChangelogConfiguration valid() {
         if (isEmpty(lastTagFormat) && isEmpty(lastTag)) {
             throw new IllegalStateException("LastTagFormat or lastTag must be specified");
@@ -39,6 +41,11 @@ public class ChangelogConfiguration {
         if (mergeRequestReplacement == null || !mergeRequestReplacement.contains(GitLabMergeRequestModifier.MR_TOKEN)) {
             throw new IllegalStateException("mergeRequestReplacement must contain token " + GitLabMergeRequestModifier.MR_TOKEN);
         }
+        return this;
+    }
+
+    public ChangelogConfiguration setIncrementVersionAfterRun(String incrementVersionAfterRun) {
+        this.incrementVersionAfterRun = Boolean.parseBoolean(incrementVersionAfterRun);
         return this;
     }
 

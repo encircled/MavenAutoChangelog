@@ -79,6 +79,12 @@ public class ChangelogMojo extends AbstractMojo {
     @Parameter(defaultValue = " MR#$1")
     protected String mergeRequestReplacement;
 
+    /**
+     * If true, add line with auto-incremented version after changelog generation
+     */
+    @Parameter(defaultValue = "false")
+    protected String incrementVersionAfterRun;
+
     public static final List<MessageFilter> filters = Collections.singletonList(
             (MessageFilter) (needle, state) -> state.conf.applicableCommitPattern.matcher(needle).matches()
     );
@@ -107,6 +113,7 @@ public class ChangelogMojo extends AbstractMojo {
                 .setCommitFormat(commitFormat)
                 .setMergeRequestReplacePattern(mergeRequestReplacePattern)
                 .setMergeRequestReplacement(mergeRequestReplacement)
+                .setIncrementVersionAfterRun(incrementVersionAfterRun)
                 .valid();
     }
 

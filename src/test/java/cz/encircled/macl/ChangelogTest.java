@@ -1,5 +1,6 @@
 package cz.encircled.macl;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ public class ChangelogTest extends AbstractTest {
     public void testAppendNewMessages() {
         ChangelogExecutor executor = appendExecutor();
         int unreleasedLine = executor.getIndexOfUnreleasedLine(changelog_A());
-        Integer lastTag = executor.getLastTag(changelog_A()).getRight();
+        Pair<String, Integer> lastTag = executor.getLastTag(changelog_A());
 
         List<String> result = executor.insertNewMessages(changelog_A(), newMessagesFiltered(), unreleasedLine, lastTag);
         Assert.assertEquals(changelog_A(newMessagesFiltered()), result);
@@ -28,7 +29,7 @@ public class ChangelogTest extends AbstractTest {
         ChangelogExecutor executor = appendExecutor();
         List<String> allLines = changelog_A(Collections.singleton(""));
         int unreleasedLine = executor.getIndexOfUnreleasedLine(allLines);
-        Integer lastTag = executor.getLastTag(allLines).getRight();
+        Pair<String, Integer> lastTag = executor.getLastTag(changelog_A());
 
         List<String> result = executor.insertNewMessages(allLines, newMessagesFiltered(), unreleasedLine, lastTag);
 
@@ -41,7 +42,7 @@ public class ChangelogTest extends AbstractTest {
     public void testAppendNewMessagesDuplicities() {
         ChangelogExecutor executor = appendExecutor();
         int unreleasedLine = executor.getIndexOfUnreleasedLine(changelog_A());
-        Integer lastTag = executor.getLastTag(changelog_A()).getRight();
+        Pair<String, Integer> lastTag = executor.getLastTag(changelog_A());
 
         Set<String> newMessages = newMessagesFiltered();
         newMessages.add("- (MY-777) new feature");
