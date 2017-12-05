@@ -32,11 +32,11 @@ public class ChangelogConfiguration {
     public Boolean incrementVersionAfterRun;
 
     public ChangelogConfiguration valid() {
-        if (isEmpty(lastTagFormat) && isEmpty(lastTag)) {
-            throw new IllegalStateException("LastTagFormat or lastTag must be specified");
+        if (lastTagPattern == null && isEmpty(lastTag)) {
+            throw new IllegalStateException("lastTagPattern or lastTag must be specified");
         }
-        if (!isEmpty(lastTagFormat) && !isEmpty(lastTag)) {
-            throw new IllegalStateException("Only one of [lastTagFormat, lastTag] might be present");
+        if (lastTagPattern != null && !isEmpty(lastTag)) {
+            throw new IllegalStateException("Only one of [lastTagPattern, lastTag] might be present");
         }
         if (mergeRequestReplacement == null || !mergeRequestReplacement.contains(GitLabMergeRequestModifier.MR_TOKEN)) {
             throw new IllegalStateException("mergeRequestReplacement must contain token " + GitLabMergeRequestModifier.MR_TOKEN);

@@ -32,7 +32,7 @@ public class LastTagTest extends AbstractTest {
     public void testLastTagIsMissing() {
         assertException(() -> executor(new ChangelogConfiguration().valid()),
 
-                "LastTagFormat or lastTag must be specified");
+                "lastTagPattern or lastTag must be specified");
     }
 
     @Test
@@ -40,10 +40,10 @@ public class LastTagTest extends AbstractTest {
         assertException(() ->
                         executor(new ChangelogConfiguration()
                                 .setLastTag("123")
-                                .setLastTagFormat("123")
+                                .setLastTagPattern("123")
                                 .valid()),
 
-                "Only one of [lastTagFormat, lastTag] might be present");
+                "Only one of [lastTagPattern, lastTag] might be present");
     }
 
     @Test

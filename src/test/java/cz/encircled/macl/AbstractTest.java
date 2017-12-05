@@ -27,7 +27,7 @@ public class AbstractTest {
         try {
             callable.run();
         } catch (Exception e) {
-            Assert.assertEquals(e.getMessage(), message);
+            Assert.assertEquals(message, e.getMessage());
             return;
         }
         Assert.fail("Exception [" + message + "] is expected!");
