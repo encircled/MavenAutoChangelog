@@ -23,9 +23,16 @@ public class GitLabMergeRequestModifier implements MessageModifier {
 
     @Override
     public String modify(String currentLine, ParsingState state) {
-        String mergeRequest = currentLine.substring(currentLine.lastIndexOf(" ") + 1);
-        String replacement = conf.mergeRequestReplacement.replace(MR_TOKEN, mergeRequest);
+        String replacement = conf.mergeRequestReplacement.replace(MR_TOKEN, getMrNumber(currentLine));
         return conf.mergeRequestReplacePattern.matcher(state.previousMatched).replaceFirst(replacement);
+    }
+
+    private String getMrNumber(String currentLine) {
+        String mergeRequest = currentLine.substring(currentLine.lastIndexOf(" ") + 1);
+        if (mergeRequest.contains("/")) {
+            return mergeRequest.substring(mergeRequest.indexOf("!"));
+        }
+        return mergeRequest;
     }
 
 }

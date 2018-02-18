@@ -54,6 +54,24 @@ public class GitLabMergeRequestModifierTest extends AbstractTest {
     }
 
     @Test
+    public void testMRNumAppendedLeadingExclamation() {
+        String test = "[Test] test";
+        Set<String> result = defaultMessageProcessor(conf())
+                .getNewMessages(Arrays.asList(test, "See merge request !1"));
+
+        Assert.assertEquals(Collections.singleton("[Test !1] test"), result);
+    }
+
+    @Test
+    public void testMRNumAppendedWithProjectName() {
+        String test = "[Test] test";
+        Set<String> result = defaultMessageProcessor(conf())
+                .getNewMessages(Arrays.asList(test, "See merge request group/project!1"));
+
+        Assert.assertEquals(Collections.singleton("[Test !1] test"), result);
+    }
+
+    @Test
     public void testModify() {
         GitLabMergeRequestModifier modifier = new GitLabMergeRequestModifier(conf());
         String result = modifier.modify("- See merge request 125!", state());
