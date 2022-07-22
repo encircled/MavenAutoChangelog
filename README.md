@@ -14,7 +14,7 @@ Maven goal `generate-changelog`.
 Maven plugin properties:
 - *pathToChangelog* - Path to changelog file. Default is CHANGELOG.md
 - *lastTag* - Predefined git tag which is used for comparing. Alternatively, `lastTagPattern` may be used to parse latest tag dynamically
-- *lastTagPattern* - Regexp pattern which is used to match line with latest release version (tag). Alternatively, `lastTag` may be used if tag is predefined
+- *lastTagPattern* - Regexp pattern which is used to match line with latest release version (tag). Alternatively, `lastTag` may be used if tag is predefined. Must have regex group with exact version, i.e. "Version: ([\d]+)"
 - *lastTagFormat* - Defines format (for java `String.format(lastTagFormat, lastTagPattern)`) which is used to customize git tag if differs from `lastTagPattern`
 - *applicableCommitPattern* - Regexp pattern which is used to filter unwanted commits, i.e. only commits which match this regexp will be included into changelog
 - *commitFormat* - Additional java `String.format(commitMessage, commitFormat)` which can be used to customize changelog entry. Default is `%s`
@@ -37,7 +37,7 @@ For example you have a CHANGELOG.md looking like
 
 Your configuration may look like:
 - *unreleasedRowPattern* - `.*[Unreleased]`
-- *lastTagPattern* - `.*[\d.] - .*`
+- *lastTagPattern* - `.*([\d.]) - .*`
 - *applicableCommitPattern* - `\(.*).*`
 - *commitFormat* - `- %s`
 - *mergeRequestReplacePattern* - `(\\))`
