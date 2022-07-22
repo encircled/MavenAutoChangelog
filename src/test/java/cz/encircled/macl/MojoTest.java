@@ -48,6 +48,9 @@ public class MojoTest extends AbstractTest {
 
         // Should not fail
         mojo.execute();
+
+        mojo.pathToChangelog = "not-exist";
+        assertException(mojo::execute, "java.nio.file.NoSuchFileException: not-exist");
     }
 
 }
