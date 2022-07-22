@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 /**
  * @author Kisel on 22.6.2017.
  */
@@ -96,10 +98,6 @@ public class ChangelogConfiguration {
     public ChangelogConfiguration setUnreleasedRowPattern(String unreleasedRowPattern) {
         this.unreleasedRowPattern = Pattern.compile(unreleasedRowPattern);
         return this;
-    }
-
-    boolean isEmpty(String s) {
-        return s == null || s.isEmpty();
     }
 
 }

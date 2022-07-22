@@ -11,6 +11,9 @@ public class ConfigurationTest extends AbstractTest {
     public void testMergeRequestValidation() {
         assertException(() -> base().setMergeRequestReplacement("wrong").valid(),
                 "mergeRequestReplacement must contain token MR#");
+
+        assertException(() -> base().setMergeRequestReplacement(null).valid(),
+                "mergeRequestReplacement must contain token MR#");
     }
 
     private ChangelogConfiguration base() {
