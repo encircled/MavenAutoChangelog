@@ -6,8 +6,6 @@ import cz.encircled.macl.transform.GitLabMergeRequestModifier;
 import cz.encircled.macl.transform.MessageFilter;
 import cz.encircled.macl.transform.MessageTransformer;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -86,16 +84,16 @@ public class ChangelogMojo extends AbstractMojo {
     protected String incrementVersionAfterRun;
 
     public static final List<MessageFilter> filters = Collections.singletonList(
-            (MessageFilter) (needle, state) -> state.conf.applicableCommitPattern.matcher(needle).matches()
+            (needle, state) -> state.conf.applicableCommitPattern.matcher(needle).matches()
     );
 
     public static final List<MessageTransformer> transformers = Arrays.asList(
-            (MessageTransformer) (needle, state) -> state.previousMatched == null ? NEW_LINE + needle : needle,
-            (MessageTransformer) (needle, state) -> needle.trim(),
-            (MessageTransformer) (needle, state) -> String.format(state.conf.commitFormat, needle)
+            (needle, state) -> state.previousMatched == null ? NEW_LINE + needle : needle,
+            (needle, state) -> needle.trim(),
+            (needle, state) -> String.format(state.conf.commitFormat, needle)
     );
 
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() {
         ChangelogConfiguration conf = getChangelogConfiguration();
 
         DefaultMessageProcessor messageProcessor = new DefaultMessageProcessor(getLog(), conf, filters, transformers, Collections.singletonList(new GitLabMergeRequestModifier(conf)));
